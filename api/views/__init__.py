@@ -1,2 +1,2 @@
-from .sample import Sample
+from .auth import Register
 
