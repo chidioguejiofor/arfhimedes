@@ -19,8 +19,8 @@ class FieldValidator:
         def _validator(data):
             if len(data) < min_length:
                 raise ValidationError(
-                    message=serialization_error['min_length_error'].format(
-                        min_length))
+                    message=f'Must be more than {min_length}'
+                )
 
         return [_validator] if min_length else []
 
