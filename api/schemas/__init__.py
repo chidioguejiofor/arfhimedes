@@ -12,3 +12,8 @@ class UserSchema(Schema):
                            load_only=True,)
     verified = StringField(required=True, dump_only=True)
 
+
+class LoginSchema(Schema):
+    username_or_email = StringField(min_length=3, required=True, max_length=320)
+    password = StringField(min_length=7, required=True,
+                           load_only=True,)
