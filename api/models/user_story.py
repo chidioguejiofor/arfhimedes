@@ -23,8 +23,14 @@ class UserStory(db.Model):
     created_by_id = db.Column(
         db.Integer,db.ForeignKey('user.id', ondelete='RESTRICT',onupdate='CASCADE')
     )
+    assignee_id = db.Column(
+        db.Integer,db.ForeignKey('user.id', ondelete='RESTRICT',onupdate='CASCADE')
+    )
 
-    created_by = db.relationship("User")
+    assignee = db.relationship(
+        "User", foreign_keys=[assignee_id]
+    )
+    created_by = db.relationship("User", foreign_keys=[created_by_id])
 
     def save(self):
         db.session.add(self)

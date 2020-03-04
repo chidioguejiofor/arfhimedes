@@ -30,3 +30,8 @@ class UserStorySchema(Schema):
     created_at = fields.DateTime(dump_only=True)
     updated_at = fields.DateTime(dump_only=True)
     created_by = fields.Nested(UserSchema)
+    assignee = fields.Nested(UserSchema)
+
+
+class AssignUserStorySchema(Schema):
+    admin_id = fields.Integer(required=True)
