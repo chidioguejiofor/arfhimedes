@@ -17,3 +17,16 @@ class LoginSchema(Schema):
     username_or_email = StringField(min_length=3, required=True, max_length=320)
     password = StringField(min_length=7, required=True,
                            load_only=True,)
+
+
+class UserStorySchema(Schema):
+    id = fields.Integer()
+    summary = StringField(required=True)
+    description = StringField(required=True)
+    type = StringField(required=True)
+    complexity = fields.Integer()
+    cost = fields.Integer()
+    estimated_complete_time = fields.DateTime(required=True)
+    created_at = fields.DateTime(dump_only=True)
+    updated_at = fields.DateTime(dump_only=True)
+    created_by = fields.Nested(UserSchema)
