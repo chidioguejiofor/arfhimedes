@@ -7,19 +7,16 @@ class TokenManager:
     SECRET = os.getenv('JWT_SECRET')
 
     @classmethod
-    def decode_token_data(cls, token, token_type, verify=True):
-        return cls.decode_token(token, token_type, verify)['data']
+    def decode_token_data(cls, token, verify=True):
+        return cls.decode_token(token, verify)['data']
 
     @classmethod
-    def decode_token(cls, token, token_type, verify=True):
+    def decode_token(cls, token, verify=True):
         token_data = jwt.decode(token,
                                 cls.SECRET,
                                 algorithms=['HS256'],
                                 verify=verify)
-        if token_data['data']['type'] == token_type:
-            return token_data
-
-        raise jwt.exceptions.PyJWTError()
+        return token_data
 
     @classmethod
     def create_token(cls, token_data, **timedelta_kwargs):

@@ -14,7 +14,7 @@ class User(db.Model):
     _password = None
 
     UniqueConstraint(email, name='user_unique_email')
-    UniqueConstraint(username, name='user_unique_email')
+    UniqueConstraint(username, name='user_unique_username')
     @property
     def password(self):
         return self._password
