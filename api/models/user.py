@@ -1,10 +1,9 @@
 from settings import db
 from sqlalchemy import UniqueConstraint
 from passlib.hash import pbkdf2_sha512
+from .base import BaseModel
 
-
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+class User(BaseModel):
     first_name = db.Column(db.String,nullable=False)
     email = db.Column(db.String,nullable=False)
     last_name = db.Column(db.String,nullable=False)
@@ -26,11 +25,4 @@ class User(db.Model):
 
     def verify_password(self, password_str):
         return pbkdf2_sha512.verify(password_str, self.password_hash)
-
-    def save(self):
-        db.session.add(self)
-        db.session.commit()
-
-    def update(self):
-        db.session.commit()
 
