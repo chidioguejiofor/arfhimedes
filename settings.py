@@ -56,7 +56,6 @@ def create_app(current_env=os.getenv('FLASK_ENV', 'development')):
 
     CORS(app, origins=origins, supports_credentials=True)
     app.config.from_object(ENV_MAPPER[current_env])
-    print(ENV_MAPPER[current_env])
     api = Api(app)
     db.init_app(app)
     migrate = Migrate(app, db)
@@ -67,18 +66,5 @@ def create_app(current_env=os.getenv('FLASK_ENV', 'development')):
     import api.models as models
 
     create_error_handlers(app)
-    #
-    # @app.shell_context_processor
-    # def make_shell_context():
-    #     import api.schemas as schemas
-    #     object_dicts = {
-    #         model_name: model_obj
-    #         for model_name, model_obj in inspect.getmembers(
-    #             models, inspect.isclass)
-    #     }
-    #     for schema_name, schema_obj in inspect.getmembers(
-    #             models, inspect.isclass):
-    #         object_dicts[schema_name] = schema_obj
-    #     return object_dicts
 
     return app

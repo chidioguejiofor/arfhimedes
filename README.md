@@ -17,3 +17,9 @@ You can start the app by running `python app.py`
 
 ### Documentation
 Postman: [![Run in Postman](https://run.pstmn.io/button.svg)](https://documenter.getpostman.com/view/4208573/SzRuZYJ1)
+
+### Linting
+You can run lint:
+```bash 
+yapf -ir $(find . -name '*.py')
+```

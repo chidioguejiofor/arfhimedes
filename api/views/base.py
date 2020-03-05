@@ -5,7 +5,7 @@ from api.models import User
 import jwt
 from api.utils.token_manager import TokenManager
 from api.utils.exceptions import ResponseException
-
+from api.utils.messages import TOKEN_EXPIRED, INVALID_TOKEN, FORBIDDEN
 
 class AuthenticationDecorator:
     def __init__(self, view):
@@ -26,21 +26,26 @@ class AuthenticationDecorator:
         auth = request.headers.get('Authorization')
         if not auth:
             raise ResponseException(
-                message='Please provided a valid token',
+                message=INVALID_TOKEN,
                 status_code=401,
             )
         auth = auth.split(' ')
         if len(auth) != 2 or auth[0] != 'Bearer':
             raise ResponseException(
-                message='Please provided a valid token',
+                message=INVALID_TOKEN,
                 status_code=401,
             )
         try:
             return TokenManager.decode_token_data(auth[1])
 
-        except jwt.exceptions.PyJWTError as e:
+        except jwt.exceptions.ExpiredSignature as e:
             raise ResponseException(
-                message='Token provided is invalid',
+                message=TOKEN_EXPIRED,
+                status_code=401,
+            )
+        except jwt.PyJWTError:
+            raise ResponseException(
+                message=INVALID_TOKEN,
                 status_code=401,
             )
 
@@ -53,14 +58,13 @@ class AuthenticationDecorator:
 
         if method_is_protected:
             decoded_data = self._decode_token()
-            return decoded_data
         if method_is_protected and method_is_admin_only:
             user = User.query.filter_by(id=decoded_data.get('id'),
                                         is_admin=True).first()
             if not user:
                 raise ResponseException(
-                    message='You dont have permission to perform this action',
-                    status_code=401,
+                    message=FORBIDDEN,
+                    status_code=403,
                 )
         return decoded_data
 

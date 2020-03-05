@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+from api.utils.messages import TIME_IN_PAST_ERROR
 import re
 from marshmallow import fields, ValidationError
 
@@ -59,3 +61,22 @@ b
         if self.capitalize:
             des_value = des_value.capitalize()
         return des_value
+
+
+class DateTimeField(fields.DateTime):
+    def __init__(self, must_be_in_future=False, tz=None, *args, **kwargs):
+        validator_list = (
+                self._get_validate_datetime(must_be_in_future) +
+                kwargs.pop('validate', [])
+        )
+        self.tz= None
+        if tz:
+            self.tz =getattr(timezone, tz)
+        super().__init__(*args, validate=validator_list, **kwargs)
+
+    def _get_validate_datetime(self, time_in_future):
+        def _validator(data):
+            if data < datetime.now(tz=self.tz):
+                raise ValidationError(message=TIME_IN_PAST_ERROR)
+
+        return [_validator] if time_in_future else []
