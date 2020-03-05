@@ -1,4 +1,4 @@
-from .custom_fields import StringField, fields
+from .custom_fields import StringField, fields, DateTimeField
 from api.models import StatusEnum
 from marshmallow import Schema
 from .user import UserSchema
@@ -12,7 +12,10 @@ class UserStorySchema(Schema):
     type = StringField(required=True)
     complexity = fields.Integer()
     cost = fields.Integer()
-    estimated_complete_time = fields.DateTime(required=True)
+    estimated_complete_time = DateTimeField(
+        required=True, must_be_in_future=True,
+        tz='utc'
+    )
     created_at = fields.DateTime(dump_only=True)
     updated_at = fields.DateTime(dump_only=True)
     created_by = fields.Nested(UserSchema)

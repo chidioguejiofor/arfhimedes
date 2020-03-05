@@ -3,3 +3,7 @@ USER_ALREADY_EXISTS = 'Either the email or the username already exists'
 LOGIN_FAILED = "Credentials not found"
 LOGIN_SUCCESS = 'Login was successful'
 MISSING_DATA = 'Missing data for required field.'
+CREATED_USER = 'Successfully created user story'
+INVALID_TOKEN = 'Please provide a valid token'
+TOKEN_EXPIRED = 'Your session has expired, please login again'
+TIME_IN_PAST_ERROR= 'Must be a time in the future'

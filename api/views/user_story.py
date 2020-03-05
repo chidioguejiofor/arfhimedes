@@ -78,4 +78,4 @@ class UserStoryView(BaseView):
         return {
             'message': 'Successfully created user story',
             'data': schema.dump(user_story)
-        }
+        }, 201
