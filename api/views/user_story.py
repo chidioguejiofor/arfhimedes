@@ -3,9 +3,9 @@ from flask import request
 from api.models import UserStory, User
 from api.schemas import UserStorySchema, AssignUserStorySchema, StatusSchema
 from .base import BaseView
+from api.utils.messages import ASSIGNED_TO_ADMIN_SUCCESS, NOT_FOUND, CANNOT_ASSIGN_YOURSELF
 
-
-@endpoint('/userstory/<string:story_id>/assign')
+@endpoint('/userstory/<int:story_id>/assign')
 class UserStoryView(BaseView):
     PROTECTED_METHODS = ['POST']
 
@@ -15,26 +15,26 @@ class UserStoryView(BaseView):
         user_story = UserStory.query.filter_by(
             id=story_id, created_by_id=user_data['id']).first()
         if not user_story:
-            return {'message': "User story was not found"}, 404
+            return {'message': NOT_FOUND.format('User story')}, 404
 
         admin = User.query.filter_by(id=validated_data['admin_id'],
                                      is_admin=True).first()
         if not admin:
-            return {'message': "The admin was not found"}, 404
+            return {'message': NOT_FOUND.format('Admin')}, 404
 
         if admin.id == user_data['id']:
-            return {'message': "You can't assign story to yourself"}, 400
+            return {'message': CANNOT_ASSIGN_YOURSELF}, 403
 
         user_story.assignee_id = admin.id
         user_story.save()
         schema = UserStorySchema(exclude=['created_by'])
         return {
-            'message': 'Assigned to admin',
+            'message': ASSIGNED_TO_ADMIN_SUCCESS,
             'data': schema.dump(user_story)
         }
 
 
-@endpoint('/userstory/<string:story_id>/status')
+@endpoint('/userstory/<int:story_id>/status')
 class ModifyUserStoryView(BaseView):
     PROTECTED_METHODS = ['PUT']
     ADMIN_METHODS = ['PUT']

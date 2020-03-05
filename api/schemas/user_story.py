@@ -16,8 +16,8 @@ class UserStorySchema(Schema):
         required=True, must_be_in_future=True,
         tz='utc'
     )
-    created_at = fields.DateTime(dump_only=True)
-    updated_at = fields.DateTime(dump_only=True)
+    created_at = DateTimeField(dump_only=True)
+    updated_at = DateTimeField(dump_only=True)
     created_by = fields.Nested(UserSchema)
     assignee = fields.Nested(UserSchema)
     status = EnumField(enum=StatusEnum, by_value=False, dump_only=True)
@@ -28,4 +28,4 @@ class StatusSchema(Schema):
 
 
 class AssignUserStorySchema(Schema):
-    admin_id = fields.Integer(required=True)
+    admin_id = fields.Integer(strict=True, required=True)
