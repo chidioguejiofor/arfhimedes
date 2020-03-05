@@ -1,7 +1,8 @@
 from settings import db
 
+
 class BaseModel(db.Model):
-    __abstract__=True
+    __abstract__ = True
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
     def save(self):
@@ -10,4 +11,3 @@ class BaseModel(db.Model):
 
     def update(self):
         db.session.commit()
-
