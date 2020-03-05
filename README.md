@@ -1,3 +1,4 @@
+[![Maintainability](https://api.codeclimate.com/v1/badges/9218364beb3a67c80be8/maintainability)](https://codeclimate.com/github/chidioguejiofor/arfhimedes/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/9218364beb3a67c80be8/test_coverage)](https://codeclimate.com/github/chidioguejiofor/arfhimedes/test_coverage)
 # User story app
 
 This is a project built in an interview test

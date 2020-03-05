@@ -56,6 +56,7 @@ def create_app(current_env=os.getenv('FLASK_ENV', 'development')):
 
     CORS(app, origins=origins, supports_credentials=True)
     app.config.from_object(ENV_MAPPER[current_env])
+    print(ENV_MAPPER[current_env])
     api = Api(app)
     db.init_app(app)
     migrate = Migrate(app, db)
