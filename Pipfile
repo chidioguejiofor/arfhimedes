@@ -18,10 +18,10 @@ pyjwt = "*"
 marshmallow-enum = "*"
 pytest = "*"
 pytest-cov = "*"
+faker = "*"
 
 [dev-packages]
 yapf = "*"
-pytest-cov = "*"
 
 [requires]
 python_version = "3.6"

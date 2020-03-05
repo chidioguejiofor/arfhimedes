@@ -13,6 +13,7 @@ class UserSchema(Schema):
         required=True,
         load_only=True,
     )
+    is_admin = fields.Boolean(dump_only=True)
     verified = StringField(required=True, dump_only=True)
 
 

@@ -3,6 +3,10 @@ from flask import request
 from api.models import User
 from api.schemas import UserSchema, LoginSchema
 from api.utils.token_manager import TokenManager
+from api.utils.messages import (
+    SIGN_UP_SUCCESS, USER_ALREADY_EXISTS,
+    LOGIN_FAILED, LOGIN_SUCCESS
+)
 from sqlalchemy.exc import IntegrityError
 from psycopg2 import errors
 from .base import BaseView
@@ -20,14 +24,13 @@ class Register(BaseView):
         except IntegrityError as e:
             if isinstance(e.orig, errors.UniqueViolation):
                 return {
-                    'message':
-                    'Either the email or the username already exists',
+                    'message': USER_ALREADY_EXISTS,
                 }, 409
 
         return {
-            'message': 'You have been successfully registered',
+            'message': SIGN_UP_SUCCESS,
             'data': schema.dump(user)
-        }
+        }, 201
 
 
 @endpoint('/login')
@@ -44,7 +47,7 @@ class Login(BaseView):
                 username=validated_data['username_or_email']).first()
 
         if not user or not user.verify_password(validated_data['password']):
-            return {'message': "Credentials not found"}, 404
+            return {'message': LOGIN_FAILED}, 404
 
         schema = UserSchema()
         data = schema.dump(user)
@@ -55,6 +58,6 @@ class Login(BaseView):
         }
         data['token'] = TokenManager.create_token(token_data, days=3)
         return {
-            'message': 'You have been successfully registered',
+            'message': LOGIN_SUCCESS,
             'data': data
         }
