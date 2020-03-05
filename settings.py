@@ -6,6 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_cors import CORS
 from marshmallow.exceptions import ValidationError
+from api.utils.exceptions import ResponseException
 import dotenv
 import inspect
 from config import ENV_MAPPER
@@ -24,15 +25,24 @@ def create_error_handlers(app):
         if '_schema' in error.messages:
             error.messages = error.messages['_schema']
         return {
-            'status': 'error',
             'errors': error.messages,
             'message': 'Some fields are invalid'
         }, 400
 
+    @app.errorhandler(ResponseException)
+    def handle_errors(error):
+        response_dict = {
+            'message': error.message,
+        }
+        if error.errors:
+
+            response_dict['errors'] = error.errors
+        return response_dict, error.status_code
+
     @app.errorhandler(Exception)
     def handle_any_other_errors(error):
         logging.exception(error)
-        return {'status': 'error', 'message': 'Unknown Error'}, 500
+        return {'message': 'Unknown Error'}, 500
 
 
 def create_app(current_env=os.getenv('FLASK_ENV', 'development')):

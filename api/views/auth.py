@@ -1,26 +1,27 @@
 from settings import endpoint
 from flask import request
-from flask_restplus import Resource
 from api.models import User
 from api.schemas import UserSchema, LoginSchema
 from api.utils.token_manager import TokenManager
 from sqlalchemy.exc import IntegrityError
 from psycopg2 import errors
+from .base import BaseView
 
 
 @endpoint('/register')
-class Register(Resource):
+class Register(BaseView):
     @staticmethod
     def post():
         schema = UserSchema()
-        validated_data  = schema.load(request.get_json())
+        validated_data = schema.load(request.get_json())
         user = User(**validated_data)
         try:
             user.save()
         except IntegrityError as e:
             if isinstance(e.orig, errors.UniqueViolation):
                 return {
-                    'message': 'Either the email or the username already exists',
+                    'message':
+                    'Either the email or the username already exists',
                 }, 409
 
         return {
@@ -30,26 +31,25 @@ class Register(Resource):
 
 
 @endpoint('/login')
-class Login(Resource):
+class Login(BaseView):
     @staticmethod
     def post():
-
-        validated_data  = LoginSchema().load(request.get_json())
+        validated_data = LoginSchema().load(request.get_json())
         username_or_email = validated_data['username_or_email']
         if '@' in username_or_email:
-            user = User.query.filter_by(email=validated_data['username_or_email']).first()
+            user = User.query.filter_by(
+                email=validated_data['username_or_email']).first()
         else:
-            user = User.query.filter_by(username=validated_data['username_or_email']).first()
+            user = User.query.filter_by(
+                username=validated_data['username_or_email']).first()
 
         if not user or not user.verify_password(validated_data['password']):
-            return {
-                'message': "Credentials not found"
-            }, 404
+            return {'message': "Credentials not found"}, 404
 
         schema = UserSchema()
         data = schema.dump(user)
         token_data = {
-            'id':user.id,
+            'id': user.id,
             'email': user.email,
             'username': user.username,
         }

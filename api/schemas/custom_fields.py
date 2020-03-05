@@ -19,8 +19,7 @@ class FieldValidator:
         def _validator(data):
             if len(data) < min_length:
                 raise ValidationError(
-                    message=f'Must be more than {min_length}'
-                )
+                    message=f'Must be more than {min_length}')
 
         return [_validator] if min_length else []
 
@@ -28,9 +27,7 @@ class FieldValidator:
     def _get_max_length_validator(max_length):
         def _validator(data):
             if len(data) > max_length:
-                raise ValidationError(
-                    message=f'Must not exceed {max_length}'
-                )
+                raise ValidationError(message=f'Must not exceed {max_length}')
 
         return [_validator] if max_length else []
 
