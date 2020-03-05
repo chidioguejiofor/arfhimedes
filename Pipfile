@@ -16,9 +16,12 @@ werkzeug = "==0.16.1"
 passlib = "*"
 pyjwt = "*"
 marshmallow-enum = "*"
+pytest = "*"
+pytest-cov = "*"
 
 [dev-packages]
 yapf = "*"
+pytest-cov = "*"
 
 [requires]
 python_version = "3.6"
